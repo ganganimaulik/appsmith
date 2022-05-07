@@ -49,13 +49,13 @@ import { AppTheme } from "entities/AppTheming";
 type Props = PropertyPaneControlConfig & {
   panel: IPanelProps;
   theme: EditorTheme;
+  defaultValue?: string;
 };
 
 const SHOULD_NOT_REJECT_DYNAMIC_BINDING_LIST_FOR = ["COLOR_PICKER"];
 
 const PropertyControl = memo((props: Props) => {
   const dispatch = useDispatch();
-
   const propsSelector = getWidgetPropsForPropertyName(
     props.propertyName,
     props.dependencies,
@@ -102,7 +102,10 @@ const PropertyControl = memo((props: Props) => {
     return get(widgetStylesheet, props.propertyName);
   })();
 
-  const propertyValue = _.get(widgetProperties, props.propertyName);
+  const propertyValue =
+    _.get(widgetProperties, props.propertyName) === undefined
+      ? props.defaultValue
+      : _.get(widgetProperties, props.propertyName);
 
   /**
    * checks if property value is deviated or not.
